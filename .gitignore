@@ -12,3 +12,5 @@ secrets.json
 *.db
 logs/
 TestResults/
+# Accidentally cloned nested repository - exclude from tracking
+Student-attendence-Management/

@@ -7,7 +7,7 @@ SmartAttend is a student attendance application built with ASP.NET Core MVC, .NE
 - Student registration, search, editing, and deactivation; unique enrollment numbers and class validation.
 - Department, class, teacher, subject, and subject-to-teacher assignment management.
 - Attendance by class, assigned subject, date, and period. Active class roster, Present/Absent/Late/Excused marks, remarks, correction of an existing session, duplicate prevention, transaction, and append-only application audit entries.
-- Admin dashboard from database aggregates: active students, today’s marks, all-time average, low-attendance count, last-seven-day totals, month-to-date counts, class summaries, and recent sessions. Excused records are excluded from attendance percentages. Present and Late count as attended.
+- Admin dashboard from database aggregates: active students, today's marks, all-time average, low-attendance count, last-seven-day totals, month-to-date counts, class summaries, and recent sessions. Excused records are excluded from attendance percentages. Present and Late count as attended.
 - Attendance register filters and CSV export (quoted/escaped cells and formula-injection prefix handling).
 - Role-based cookie authentication for Administrator, Teacher, and Student; profile-scoped teacher/student views; no public privileged registration.
 - Administrator account creation for linked teacher and student profiles. Passwords are stored using ASP.NET Core `PasswordHasher`, never as plaintext. Eight login attempts per minute per IP are allowed.
@@ -60,7 +60,7 @@ Run `dotnet test SmartAttend.sln`. Unit tests cover attendance percentage rules 
 
 ## Deployment
 
-Never expose LocalDB or a developer’s local SQL Server over the internet. Use a managed SQL Server-compatible database, set the connection string as a hosting secret, apply reviewed SQL scripts before release, use HTTPS, and deploy only after security and database integration testing. `/healthz` returns 503 when the database cannot connect.
+Never expose LocalDB or a developer's local SQL Server over the internet. Use a managed SQL Server-compatible database, set the connection string as a hosting secret, apply reviewed SQL scripts before release, use HTTPS, and deploy only after security and database integration testing. `/healthz` returns 503 when the database cannot connect.
 
 As of October 2026, [Azure App Service documents an F1 free web-app tier](https://learn.microsoft.com/en-us/azure/app-service/quickstart-dotnetcore), and [Azure SQL documents a free offer with usage limits](https://github.com/MicrosoftDocs/sql-docs/blob/live/azure-sql/database/free-offer.md). Those are separate resources and SQL usage beyond free limits can be billed; check current eligibility, region, limits, and billing settings before choosing it. Other free web hosts may not support a persistent .NET process and SQL Server database together. There is no public deployment configured by this project.
 
