@@ -1,0 +1,171 @@
+@model attendence.Models.DashboardViewModel
+
+@{
+    ViewData["Title"] = "Overview";
+}
+
+<div class="py-4">
+    <span class="text-uppercase text-secondary small fw-bold">
+        @Model.InstitutionName · OVERVIEW
+    </span>
+
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+        <div>
+            <h1 class="h2 fw-bold mt-2">Smarter attendance. Better outcomes.</h1>
+            <p class="text-secondary">
+                A clear view of student attendance and academic engagement.
+            </p>
+        </div>
+
+        <a class="btn btn-primary"
+           asp-controller="Students"
+           asp-action="Create">
+            ＋ Add student
+        </a>
+    </div>
+</div>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-warning">
+        @TempData["Error"]
+    </div>
+}
+
+<div class="row g-3 mb-4">
+
+    <div class="col-sm-6 col-xl-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="text-secondary small">Total students</div>
+                <div class="display-6 fw-semibold">@Model.TotalStudents</div>
+                <div class="text-secondary small">Active registered students</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-6 col-xl-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="text-secondary small">Present marks today</div>
+                <div class="display-6 fw-semibold">@Model.AttendanceToday</div>
+                <div class="text-secondary small">Absent @Model.AbsentToday · Late @Model.LateToday · Excused @Model.ExcusedToday</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-6 col-xl-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="text-secondary small">Average attendance</div>
+                <div class="display-6 fw-semibold">@Model.AverageAttendance.ToString("0.0")%</div>
+                <div class="text-secondary small">All-time valid marks; Excused excluded</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-6 col-xl-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="text-secondary small">Low attendance</div>
+                <div class="display-6 fw-semibold">@Model.LowAttendance</div>
+                <div class="text-secondary small">Below @Model.LowAttendanceThreshold.ToString("0.#")% attendance</div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="row g-3">
+
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-4">
+                <h2 class="h5 fw-bold">Attendance activity</h2>
+
+                <p class="text-secondary small">
+                    Attendance information from your recorded sessions.
+                </p>
+
+                @if (Model.AttendanceToday > 0)
+                {
+                    <div class="rounded bg-light p-5 text-center">
+                        <div class="text-secondary">Students present today</div>
+                        <div class="display-5 fw-bold text-primary">
+                            @Model.AttendanceToday
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="rounded bg-light p-5 text-center text-secondary">
+                        No attendance records for today yet.
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-4">
+                <h2 class="h5 fw-bold">Quick actions</h2>
+
+                <a class="d-block py-3"
+                   asp-controller="Students"
+                   asp-action="Index">
+                    Manage students →
+                </a>
+
+                <a class="d-block py-3" asp-controller="Attendance" asp-action="Index">
+                    Record attendance →
+                </a>
+
+                <a class="d-block py-3" asp-controller="Reports" asp-action="Index">
+                    View reports →
+                </a>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="row g-3 mt-1">
+    <div class="col-lg-7">
+        <div class="card border-0 shadow-sm h-100"><div class="card-body p-4">
+            <h2 class="h5 fw-bold">Weekly attendance</h2><p class="small text-secondary">Recorded Present, Absent, and Late marks · last 7 days</p>
+            @if(Model.Weekly.Count==0){<div class="rounded bg-light p-4 text-center text-secondary">No attendance records in the last 7 days.</div>}
+            else{<div class="table-responsive"><table class="table table-sm align-middle"><thead><tr><th>Date</th><th>Present</th><th>Absent</th><th>Late</th></tr></thead><tbody>@foreach(var day in Model.Weekly){<tr><td>@day.Date.ToString("ddd, dd MMM")</td><td class="text-success">@day.Present</td><td class="text-danger">@day.Absent</td><td class="text-warning-emphasis">@day.Late</td></tr>}</tbody></table></div>}
+        </div></div>
+    </div>
+    <div class="col-lg-5"><div class="card border-0 shadow-sm h-100"><div class="card-body p-4">
+        <h2 class="h5 fw-bold">This month</h2><p class="small text-secondary">Recorded marks since @DateTime.Today.ToString("MMMM 1")</p>
+        <div class="d-flex justify-content-between py-2 border-bottom"><span>Present</span><strong class="text-success">@Model.MonthPresent</strong></div><div class="d-flex justify-content-between py-2 border-bottom"><span>Absent</span><strong class="text-danger">@Model.MonthAbsent</strong></div><div class="d-flex justify-content-between py-2 border-bottom"><span>Late</span><strong class="text-warning-emphasis">@Model.MonthLate</strong></div><div class="d-flex justify-content-between py-2"><span>Excused</span><strong class="text-secondary">@Model.MonthExcused</strong></div>
+    </div></div></div>
+    <div class="col-lg-7"><div class="card border-0 shadow-sm"><div class="card-body p-4"><h2 class="h5 fw-bold">Class summaries</h2><p class="small text-secondary">All-time percentage; Excused marks are excluded.</p>
+    @if(Model.Classes.Count==0){<div class="text-secondary small">No classes have been configured.</div>}else{<div class="table-responsive"><table class="table table-sm"><thead><tr><th>Class</th><th>Active students</th><th>Attendance</th></tr></thead><tbody>@foreach(var item in Model.Classes){<tr><td>@item.ClassName</td><td>@item.Students</td><td>@item.Percentage.ToString("0.0")%</td></tr>}</tbody></table></div>}
+    </div></div></div>
+    <div class="col-lg-5"><div class="card border-0 shadow-sm"><div class="card-body p-4"><h2 class="h5 fw-bold">Recent sessions</h2>
+    @if (Model.Recent == null || Model.Recent.Count == 0)
+    {
+        <div class="text-secondary small">No attendance sessions recorded.</div>
+    }
+    else
+    {
+        <ul class="list-group list-group-flush">
+            @foreach (var r in Model.Recent)
+            {
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                    <div>
+                        <div class="fw-semibold">@r.Subject</div>
+                        <div class="small text-secondary">@r.ClassName · @r.Date.ToString("dd MMM yyyy")</div>
+                    </div>
+                    <span class="badge rounded-pill bg-primary">@r.Records</span>
+                </li>
+            }
+        </ul>
+    }
+    </div></div></div>
+    </div></div></div>
+</div>
+
